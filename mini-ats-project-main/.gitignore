@@ -23,3 +23,19 @@ dist-ssr
 *.sln
 *.sw?
 
+
+# Python virtual environment
+backend/venv/
+backend/.venv/
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
