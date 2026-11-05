@@ -1,195 +1,402 @@
 # Mini ATS — Resume Screening & Candidate Ranking System
 
-> **Third-Year Engineering DBMS Mini Project | Phase 1: Frontend Prototype**  
-> A modern, responsive, and interactive recruitment platform built with **React, Vite, Tailwind CSS, and Recharts**, engineered to demonstrate automated resume screening, mathematical skill-matching, and candidate ranking.
+**A Smart Recruitment Platform with Automated Skill Matching and Candidate Ranking**
+
+![Project](https://img.shields.io/badge/Project-DBMS%20Mini%20Project-blue)
+![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB)
+![Styling](https://img.shields.io/badge/Styling-Tailwind%20CSS-38B2AC)
+![Charts](https://img.shields.io/badge/Charts-Recharts-orange)
+![Status](https://img.shields.io/badge/Status-Phase%201%20Prototype-success)
 
 ---
 
-## 🌟 Key Highlights
+## 📌 Project Overview
 
-- **9 Fully Interactive Screens**: Complete end-to-end recruitment journey for both candidates and recruiters.
-- **Deterministic Skill Matching Engine**: Transparent mathematical formula comparing candidate competencies with job specifications without black-box confusion.
-- **Dynamic Candidate Ranking**: Recruiter screening dashboard automatically ranks applicants in descending score order with automated shortlisting threshold eligibility.
-- **Relational DBMS Alignment**: Directly models 6 standard relational database tables (`Users`, `Skills`, `User_Skills`, `Jobs`, `Job_Skills`, `Applications`) in a centralized Data Access Layer (`storageService.js`), fully prepared for Phase 2 Python Flask & MySQL integration.
-- **1-Click Demo Profiles**: Pre-populated with realistic candidates (Rahul Sharma, Priya Patil, etc.) and recruiter accounts for instant academic demonstrations.
-- **Data Visualizations**: Integrated Recharts for applicant volume by job, candidate match score distribution, and hiring funnel status.
+Mini ATS (Applicant Tracking System) is a modern, responsive recruitment management platform designed to simplify the hiring process through automated resume screening, skill-based matching, and candidate ranking.
 
----
+The system provides separate interfaces for candidates and recruiters, allowing candidates to explore job opportunities, manage their profiles, and evaluate their skill compatibility with job requirements. Recruiters can publish job openings, review applicants, compare candidate scores, and identify suitable candidates through an automated ranking mechanism.
 
-## 🏗️ Relational Database Schema (6 Tables)
+The project is developed as a **Third-Year Engineering DBMS Mini Project**, with Phase 1 focusing on the frontend prototype and relational database architecture. The system is designed for future integration with a Python Flask backend and MySQL database.
 
-The application data architecture strictly mirrors the following DBMS relational design:
+### 🎯 Project Objectives
 
-```
-+--------------------+        +---------------------+        +--------------------+
-|       USERS        |        |     USER_SKILLS     |        |       SKILLS       |
-+--------------------+        +---------------------+        +--------------------+
-| id (PK)            |<------>| id (PK)             |<------>| id (PK)            |
-| name               |        | userId (FK)         |        | name               |
-| email              |        | skillName           |        | category           |
-| password           |        +---------------------+        +--------------------+
-| role               |
-| phone              |        +---------------------+        +--------------------+
-| location           |        |     JOB_SKILLS      |        |        JOBS        |
-| education / degree |        +---------------------+        +--------------------+
-| experienceYears    |<------>| id (PK)             |<------>| id (PK)            |
-| resumeFile         |        | jobId (FK)          |        | recruiterId (FK)   |
-+--------------------+        | skillName           |        | title              |
-          |                   +---------------------+        | companyName        |
-          |                                                  | location / type    |
-          |                   +---------------------+        | threshold (e.g 80%)|
-          |                   |    APPLICATIONS     |        | description        |
-          |                   +---------------------+        +--------------------+
-          +------------------>| id (PK)             |                  |
-                              | jobId (FK)          |<-----------------+
-                              | candidateId (FK)    |
-                              | matchScore (%)      |
-                              | matchedSkills []    |
-                              | missingSkills []    |
-                              | status              |
-                              | appliedDate         |
-                              +---------------------+
-```
+- Automate the initial candidate screening process.
+- Reduce manual effort in evaluating candidate skills.
+- Provide transparent and explainable candidate match scores.
+- Rank applicants based on their compatibility with job requirements.
+- Demonstrate relational database concepts through a practical recruitment application.
+- Establish a scalable architecture for future backend and database integration.
 
 ---
 
-## 📐 Core Skill Matching Algorithm
+## ✨ Key Features
 
-The matching algorithm is implemented in [`src/services/matchingService.js`](file:///e:/DBM%20project/src/services/matchingService.js):
+### 1. Candidate Module
+- Candidate registration and login.
+- Personalized candidate dashboard.
+- Profile management and profile completion tracking.
+- Resume upload interface (prototype simulation).
+- Skill selection and management.
+- Job discovery with search and filtering.
+- Skill-based job compatibility scores.
+- One-click job application.
+- Match results with matched and missing skill analysis.
 
-$$\text{Match Score} = \left( \frac{\text{Number of Matched Required Skills}}{\text{Total Required Skills}} \right) \times 100$$
+### 2. Recruiter Module
+- Recruiter authentication and dashboard.
+- Job posting and management.
+- Required skill configuration.
+- Customizable shortlisting threshold.
+- Applicant screening and candidate ranking.
+- Automatic descending score-based ranking.
+- Candidate profile inspection.
+- Application status management.
+- Recruitment analytics and visualizations.
 
-### Example:
-- **Job Requirements (5 skills)**: Python, SQL, Django, Git, REST API
-- **Candidate Profile (4 skills)**: Python, SQL, Git, Django
-- **Matched Skills**: 4 (Python, SQL, Django, Git)
-- **Missing Skills**: 1 (REST API)
-- **Calculation**: $(4 / 5) \times 100 = 80\%$
-- **Shortlisting**: Since $80\% \ge \text{Threshold } (80\%)$, status is automatically marked as **`Shortlisted`**.
+### 3. Automated Skill Matching
+- Compares candidate skills against required job skills.
+- Calculates a percentage-based compatibility score.
+- Identifies matched and missing skills.
+- Automatically evaluates shortlisting eligibility based on the configured threshold.
+- Uses a deterministic and explainable mathematical formula.
+
+### 4. Interactive Dashboard & Analytics
+- Applicant statistics and KPI cards.
+- Applicant volume by job.
+- Candidate match score distribution.
+- Hiring funnel visualization.
+- Recent applications and recruitment activity.
+
+### 5. Academic Demonstration Features
+- Preloaded candidate and recruiter demo accounts.
+- Sample job listings and candidate profiles.
+- One-click demo login functionality.
+- Interactive screens for demonstrating the complete recruitment workflow.
 
 ---
 
-## 📱 The 9 Main Screens
+## 🧮 Core Skill Matching Algorithm
 
-| # | Screen Name | Route | Description |
-|---|-------------|-------|-------------|
-| **1** | **Landing Page** | `/` | Hero section, feature breakdown, 5-step screening workflow, and navigation CTAs. |
-| **2** | **Login & Registration** | `/login` | Split-screen authentication, role toggle (Candidate / Recruiter), form validation, and 1-click demo logins. |
-| **3** | **Candidate Dashboard** | `/candidate/dashboard` | Profile readiness meter, 4 metric cards, recommended jobs, recent applications, and quick actions. |
-| **4** | **Resume & Skills** | `/candidate/resume` | Personal info editor, drag-and-drop PDF resume upload simulation, and master skill selector. |
-| **5** | **Job Listings** | `/candidate/jobs` | Dynamic search, job type & experience filters, live skill-match percentages, and 1-click job application modal. |
-| **6** | **Recruiter Dashboard** | `/recruiter/dashboard` | 4 summary KPI cards, Recharts visualizations, recent applicant table, and active job management. |
-| **7** | **Post Job** | `/recruiter/post-job` | Job creation form, requirement chips, interactive qualification threshold slider (0–100%), and preview modal. |
-| **8** | **Screening & Ranking** | `/recruiter/screening` | Job selector, descending candidate rankings, color-coded score badges, quick status updates, and deep inspection modal. |
-| **9** | **Match Results & Missing Skills** | `/candidate/match-results` | Large SVG percentage ring, matched vs missing skills comparison, and transparent rule-based gap recommendations. |
+The system uses a deterministic, rule-based skill matching algorithm to calculate the compatibility between a candidate's skills and a job's required skills.
+
+### Matching Formula
+
+**Match Score:**
+
+`(Number of Matched Required Skills / Total Required Skills) × 100`
+
+### Example
+
+**Job Requirements:**
+- Python
+- SQL
+- Django
+- Git
+- REST API
+
+**Candidate Skills:**
+- Python
+- SQL
+- Django
+- Git
+
+**Matching Results:**
+
+| Metric | Result |
+|---|---|
+| Total Required Skills | 5 |
+| Matched Skills | 4 |
+| Missing Skills | 1 |
+| Match Score | 80% |
+
+**Calculation:**
+
+`(4 / 5) × 100 = 80%`
+
+**Shortlisting Decision:**
+
+If the recruiter's configured shortlisting threshold is 80%, the candidate qualifies for shortlisting.
+
+The algorithm also provides a transparent breakdown of matched and missing skills, making candidate evaluation easier to understand.
+
+**Implementation:** `src/services/matchingService.js`
+
+---
+
+## 🗄️ Database Design — Relational DBMS Architecture
+
+The application follows a relational database design consisting of six core tables.
+
+The Phase 1 frontend data layer is structured to represent these relational entities and prepare for Phase 2 MySQL integration.
+
+### Database Tables
+
+| Table | Description |
+|---|---|
+| USERS | Stores candidate and recruiter information. |
+| SKILLS | Maintains the master list of technical and professional skills. |
+| USER_SKILLS | Maps skills to individual candidates. |
+| JOBS | Stores job postings and recruiter information. |
+| JOB_SKILLS | Maps required skills to job postings. |
+| APPLICATIONS | Stores applications, match scores, and application statuses. |
+
+### Entity Relationships
+
+- A user can possess multiple skills.
+- A skill can belong to multiple users.
+- A recruiter can create multiple job postings.
+- A job can require multiple skills.
+- A candidate can apply for multiple jobs.
+- Each application connects a candidate with a particular job.
+
+The design demonstrates primary keys, foreign keys, and many-to-many relationships.
+
+**Database schema:** `database_schema.sql`
+
+**Frontend Data Access Layer:** `src/services/storageService.js`
+
+---
+
+## 📱 Application Screens
+
+The platform includes nine interactive screens.
+
+| No. | Screen | Route | Description |
+|---|---|---|---|
+| 1 | Landing Page | `/` | Project introduction, features, and recruitment workflow. |
+| 2 | Login & Registration | `/login` | Candidate and recruiter authentication interfaces. |
+| 3 | Candidate Dashboard | `/candidate/dashboard` | Candidate statistics, recommended jobs, and applications. |
+| 4 | Resume & Skills | `/candidate/resume` | Candidate profile management and skill selection. |
+| 5 | Job Listings | `/candidate/jobs` | Job search, filtering, match scores, and applications. |
+| 6 | Recruiter Dashboard | `/recruiter/dashboard` | Recruitment KPIs, charts, and job management. |
+| 7 | Post Job | `/recruiter/post-job` | Job creation and shortlisting threshold configuration. |
+| 8 | Screening & Ranking | `/recruiter/screening` | Applicant ranking, score comparison, and status updates. |
+| 9 | Match Results | `/candidate/match-results` | Skill compatibility, missing skills, and recommendations. |
 
 ---
 
 ## 👥 Demo Accounts
 
-You can log in directly using the 1-click buttons on the Login page or using these credentials:
+The application includes preconfigured accounts for academic demonstration.
 
-| Role | Name | Email | Password | Pre-loaded Skills |
-|------|------|-------|----------|-------------------|
-| **Recruiter** | Admin Recruiter | `recruiter@technova.com` | `password123` | N/A (TechNova Solutions) |
-| **Candidate** | Rahul Sharma | `rahul.sharma@example.com` | `password123` | Python, SQL, Git, Django |
-| **Candidate** | Priya Patil | `priya.patil@example.com` | `password123` | Python, SQL, Machine Learning |
-| **Candidate** | Amit Deshmukh | `amit.deshmukh@example.com` | `password123` | Java, MySQL, HTML, CSS |
-| **Candidate** | Sneha Kulkarni | `sneha.kulkarni@example.com` | `password123` | React, JavaScript, HTML, CSS |
-| **Candidate** | Rohan Joshi | `rohan.joshi@example.com` | `password123` | Python, Flask, Git, REST API |
-| **Candidate** | Neha Singh | `neha.singh@example.com` | `password123` | SQL, Power BI, Data Analysis |
+**Demo Password:** `password123`
 
----
+| Role | Name | Email | Skills |
+|---|---|---|---|
+| Recruiter | Admin Recruiter | recruiter@technova.com | N/A |
+| Candidate | Rahul Sharma | rahul.sharma@example.com | Python, SQL, Git, Django |
+| Candidate | Priya Patil | priya.patil@example.com | Python, SQL, Machine Learning |
+| Candidate | Amit Deshmukh | amit.deshmukh@example.com | Java, MySQL, HTML, CSS |
+| Candidate | Sneha Kulkarni | sneha.kulkarni@example.com | React, JavaScript, HTML, CSS |
+| Candidate | Rohan Joshi | rohan.joshi@example.com | Python, Flask, Git, REST API |
+| Candidate | Neha Singh | neha.singh@example.com | SQL, Power BI, Data Analysis |
 
-## 🛠️ Project Structure
+Alternatively, use the one-click demo login options available on the login screen.
 
-```
-src/
-├── assets/                  # Icons & assets
-├── components/
-│   ├── candidate/           # Candidate feature modals & upload box
-│   │   ├── JobApplicationModal.jsx
-│   │   ├── ProfileEditorModal.jsx
-│   │   └── ResumeUploadBox.jsx
-│   ├── common/              # Reusable UI components
-│   │   ├── ConfirmModal.jsx
-│   │   ├── Footer.jsx
-│   │   ├── MatchScoreRing.jsx
-│   │   ├── Navbar.jsx
-│   │   ├── Sidebar.jsx
-│   │   ├── SkillChip.jsx
-│   │   ├── StatCard.jsx
-│   │   ├── StatusBadge.jsx
-│   │   └── Toast.jsx
-│   └── recruiter/           # Recruiter inspection modals
-│       ├── CandidateDetailModal.jsx
-│       └── JobPreviewModal.jsx
-├── context/
-│   ├── AuthContext.jsx      # Authentication & session provider
-│   └── ToastContext.jsx     # Modern animated toast notifications
-├── data/
-│   └── initialData.js       # Consistent demo database seed
-├── layouts/
-│   ├── CandidateLayout.jsx  # Candidate sidebar + topbar
-│   ├── MainLayout.jsx       # Public navbar + footer
-│   └── RecruiterLayout.jsx  # Recruiter sidebar + topbar
-├── pages/                   # Exactly the 9 required screens
-│   ├── AuthPage.jsx
-│   ├── CandidateDashboardPage.jsx
-│   ├── CandidateScreeningPage.jsx
-│   ├── HomePage.jsx
-│   ├── JobListingsPage.jsx
-│   ├── MatchResultsPage.jsx
-│   ├── PostJobPage.jsx
-│   ├── RecruiterDashboardPage.jsx
-│   └── ResumeSkillsPage.jsx
-├── services/
-│   ├── matchingService.js   # Mathematical skill matching algorithm
-│   └── storageService.js    # Data Access Layer (DAL) representing 6 SQL tables
-├── utils/
-│   └── helpers.js           # Score colors, profile completeness, date formatting
-├── App.jsx                  # React Router 6 setup & route guards
-├── index.css                # Tailwind CSS imports & custom styles
-└── main.jsx                 # Application entry point
-```
+> **Note:** These are demonstration credentials only. They must not be used as production authentication credentials.
 
 ---
 
-## 🚀 How to Run Locally
+## 🛠️ Technology Stack
 
-### 1. Prerequisites
-- Node.js (v18 or higher installed)
-- npm or pnpm
+### Frontend
 
-### 2. Installation
-Open a terminal in the project directory:
+| Technology | Purpose |
+|---|---|
+| React.js | Component-based user interface development. |
+| Vite | Frontend development server and build tooling. |
+| JavaScript (ES6+) | Application logic and interactivity. |
+| Tailwind CSS | Responsive styling and UI design. |
+| Recharts | Dashboard analytics and data visualization. |
+| React Router | Client-side navigation and route management. |
+| HTML5 & CSS3 | Application structure and styling. |
+
+### Backend & Database — Planned Phase 2 Integration
+
+| Technology | Purpose |
+|---|---|
+| Python | Backend development. |
+| Flask | REST API development. |
+| MySQL | Relational database management. |
+| SQL | Database queries and relational operations. |
+
+---
+
+## 📂 Project Structure
+
+```text
+Resume-Screening-System/
+│
+├── backend/
+│   └── Python backend files
+│
+├── src/
+│   ├── assets/
+│   │
+│   ├── components/
+│   │   ├── candidate/
+│   │   ├── common/
+│   │   └── recruiter/
+│   │
+│   ├── context/
+│   │   ├── AuthContext.jsx
+│   │   └── ToastContext.jsx
+│   │
+│   ├── data/
+│   │   └── initialData.js
+│   │
+│   ├── layouts/
+│   │   ├── CandidateLayout.jsx
+│   │   ├── MainLayout.jsx
+│   │   └── RecruiterLayout.jsx
+│   │
+│   ├── pages/
+│   │
+│   ├── services/
+│   │   ├── matchingService.js
+│   │   └── storageService.js
+│   │
+│   ├── utils/
+│   │   └── helpers.js
+│   │
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+│
+├── database_schema.sql
+├── index.html
+├── package.json
+├── package-lock.json
+├── postcss.config.js
+├── tailwind.config.js
+├── vite.config.js
+├── .gitignore
+└── README.md
+```
+
+---
+
+## ⚙️ Installation & Setup
+
+Follow these instructions to run the frontend prototype locally.
+
+### Prerequisites
+
+Ensure the following tools are installed:
+
+- Node.js (v18 or higher)
+- npm (Node Package Manager)
+- Git
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/dipika1813/Resume-Screening-System.git
+```
+
+### 2. Navigate to the Project Directory
+
+```bash
+cd Resume-Screening-System
+```
+
+### 3. Install Dependencies
+
 ```bash
 npm install
 ```
 
-### 3. Run Development Server
+### 4. Start the Development Server
+
 ```bash
 npm run dev
 ```
-The application will launch at `http://localhost:3000` (or `http://localhost:5173`).
 
-### 4. Build for Production
+Open the local URL displayed in your terminal. Depending on the Vite configuration, it may be:
+
+`http://localhost:5173`
+
+### 5. Build for Production
+
 ```bash
 npm run build
 ```
-Creates an optimized, minified production bundle in the `/dist` directory.
+
+This generates an optimized production build inside the `dist/` directory.
 
 ---
 
-## 🔮 Phase 2 Roadmap: Flask & MySQL Integration
+## 🔮 Future Scope — Phase 2
 
-In Phase 2, the `src/services/storageService.js` Data Access Layer will replace localStorage calls with standard `fetch()` or `axios` calls to a Python Flask REST API:
+The next development phase focuses on integrating the frontend prototype with a Python Flask backend and MySQL database.
 
-1. **Database Setup**: Run MySQL scripts creating the 6 relational tables (`Users`, `Skills`, `User_Skills`, `Jobs`, `Job_Skills`, `Applications`).
-2. **Flask Backend**:
-   - `POST /api/auth/login` (JWT token generation)
-   - `GET /api/jobs` (SELECT with JOIN on `Job_Skills`)
-   - `POST /api/applications` (Execute matching algorithm or SQL query)
-   - `GET /api/jobs/<id>/rankings` (ORDER BY match_score DESC)
-3. **Resume Storage**: Store uploaded PDF resumes in an `/uploads` directory or cloud bucket with secure path references in the MySQL `Users` table.
+### 1. MySQL Database Integration
+- Create the six relational database tables.
+- Implement primary key and foreign key constraints.
+- Establish relationships between users, skills, jobs, and applications.
+- Implement CRUD operations using SQL.
 
+### 2. Flask REST API Development
+
+Planned API endpoints include:
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| POST | `/api/auth/login` | User authentication. |
+| GET | `/api/jobs` | Retrieve available job postings. |
+| POST | `/api/applications` | Submit candidate applications. |
+| GET | `/api/jobs/<id>/rankings` | Retrieve ranked applicants. |
+
+### 3. Resume Processing
+- Implement actual PDF resume uploads.
+- Extract resume text using Python libraries.
+- Identify relevant candidate skills.
+- Compare extracted skills with job requirements.
+
+### 4. Authentication & Security
+- Implement secure password hashing.
+- Introduce token-based authentication.
+- Add role-based access control.
+- Secure API endpoints and user data.
+
+### 5. Full-Stack Integration
+- Replace frontend-only data persistence with Flask API requests.
+- Connect React components to backend services.
+- Integrate MySQL for persistent storage.
+- Implement end-to-end recruitment workflows.
+
+---
+
+## 🎓 Academic Information
+
+**Project:** Mini ATS — Resume Screening & Candidate Ranking System
+
+**Project Type:** DBMS Mini Project
+
+**Academic Level:** Third-Year Engineering
+
+**Development Phase:** Phase 1 — Frontend Prototype
+
+**Planned Backend:** Python Flask
+
+**Planned Database:** MySQL
+
+---
+
+## 👩‍💻 Developer
+
+**Dipika**
+
+GitHub: [@dipika1813](https://github.com/dipika1813)
+
+**Repository:** [Resume-Screening-System](https://github.com/dipika1813/Resume-Screening-System)
+
+---
+
+## 📄 License
+
+This project is developed for academic and educational purposes. A formal open-source license can be added if the project is intended for public reuse and distribution.
+
+---
+
+**Mini ATS — Making Recruitment Smarter Through Transparent Skill-Based Screening.**
